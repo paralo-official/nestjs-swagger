@@ -119,6 +119,10 @@ export function hasPropertyKey(
 
 export function replaceImportPath(typeReference: string, fileName: string) {
   if (!typeReference.includes('import')) {
+    if (typeReference === 'luxon.DateTime') {
+      return 'require("luxon").DateTime';
+    }
+
     return typeReference;
   }
   let importPath = /\(\"([^)]).+(\")/.exec(typeReference)[0];
@@ -160,8 +164,20 @@ export function replaceImportPath(typeReference: string, fileName: string) {
       }
     }
 
+    const isCommonImport = importPath.includes('common/lib/cjs');
+    if (isCommonImport) {
+      console.log('common import', importPath);
+    }
+    if (importPath.includes('@paralo-official/common/lib/cjs')) {
+      relativePath = '@paralo-official/common';
+    }
+
     typeReference = typeReference.replace(importPath, relativePath);
-    return typeReference.replace('import', 'require');
+    typeReference = typeReference.replace('import', 'require');
+    if (isCommonImport) {
+      console.log('converted to', typeReference);
+    }
+    return typeReference;
   }
 }
 
