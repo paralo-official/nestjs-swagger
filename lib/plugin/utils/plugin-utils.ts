@@ -164,20 +164,12 @@ export function replaceImportPath(typeReference: string, fileName: string) {
       }
     }
 
-    const isCommonImport = importPath.includes('common/lib/cjs');
-    if (isCommonImport) {
-      console.log('common import', importPath);
-    }
     if (importPath.includes('@paralo-official/common/lib/cjs')) {
       relativePath = '@paralo-official/common';
     }
 
     typeReference = typeReference.replace(importPath, relativePath);
-    typeReference = typeReference.replace('import', 'require');
-    if (isCommonImport) {
-      console.log('converted to', typeReference);
-    }
-    return typeReference;
+    return typeReference.replace('import', 'require');
   }
 }
 
